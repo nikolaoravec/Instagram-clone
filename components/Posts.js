@@ -1,42 +1,29 @@
+import { collection, onSnapshot, orderBy, query } from "@firebase/firestore";
+import { useEffect, useState } from "react";
 import Post from "./Post";
+import { db } from "../firebase";
 
 function Posts() {
-  const posts = [
-    {
-      id: "123",
-      username: "nikolaoravec",
-      userImg:
-        "https://wi.wallpapertip.com/wsimgs/41-414903_venom-facebook-profile.jpg",
-      img: "https://i.pinimg.com/originals/19/9b/9f/199b9fb73adf1ed33d7ac627d69168fd.jpg",
-      caption: "CANT WAIT!!!!! #VENOM 2",
-    },
-    {
-      id: "123",
-      username: "nikolaoravec",
-      userImg:
-        "https://wi.wallpapertip.com/wsimgs/41-414903_venom-facebook-profile.jpg",
-      img: "https://i.pinimg.com/originals/19/9b/9f/199b9fb73adf1ed33d7ac627d69168fd.jpg",
-      caption: "CANT WAIT!!!!! #VENOM 2",
-    },
-    {
-      id: "123",
-      username: "nikolaoravec",
-      userImg:
-        "https://wi.wallpapertip.com/wsimgs/41-414903_venom-facebook-profile.jpg",
-      img: "https://i.pinimg.com/originals/19/9b/9f/199b9fb73adf1ed33d7ac627d69168fd.jpg",
-      caption: "CANT WAIT!!!!! #VENOM 2",
-    },
-  ];
+  const [posts, setPosts] = useState([]);
 
+  useEffect(() => {
+    return onSnapshot(
+      query(collection(db, "posts"), orderBy("timestamp", "desc")),
+      (snapshot) => {
+        setPosts(snapshot.docs);
+      }
+    );
+  }, [db]);
   return (
     <div>
-      {posts.map(({ id, username, userImg, img, caption }) => (
+      {posts.map((post) => (
         <Post
-          key={id}
-          username={username}
-          userImg={userImg}
-          img={img}
-          caption={caption}
+          key={post.id}
+          id={post.id}
+          username={post.data().username}
+          userImg={post.data().profileImg}
+          img={post.data().image}
+          caption={post.data().caption}
         />
       ))}
     </div>

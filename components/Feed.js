@@ -13,7 +13,7 @@ function Feed() {
       <section className="col-span-2">
         {/* Stories */}
         <Stories />
-        {session && <Posts />}
+        <Posts />
         {/* Posts */}
       </section>
 
